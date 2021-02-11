@@ -1,5 +1,7 @@
 const app = require("express")();
+require("dotenv").config();
 const cors = require("cors");
+const { getQuestion } = require("./api/services");
 app.use(
   cors({
     origin: "*",
@@ -17,7 +19,15 @@ const io = require("socket.io")(http, {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  res.status(200).send("wooooo brother");
+});
+
+app.get("/api-test", async (req, res) => {
+  const data = await getQuestion();
+  if (!data) {
+    res.status(400).send("yikes");
+  }
+  res.status(200).send(data);
 });
 
 io.on("connection", (socket) => {
